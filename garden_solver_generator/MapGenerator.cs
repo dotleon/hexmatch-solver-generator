@@ -48,29 +48,46 @@ namespace garden_solver_generator
         }
 
         //generate unique map patterns
-        public static List<int[]> GenerateMapPatternsList(Random random, bool hard)
+        public static List<int[]> GenerateMapPatternsList(Random random, bool hard, int patternCount)
         {
             var mapPatternList = new List<int[]>();
             int[] mapPattern;
-            while (mapPatternList.Count < 2000)
+            int rotations = 1;
+            while (mapPatternList.Count < patternCount)
             {
                 int activeCount;
                 do
                 {
-                    mapPattern = GenerateRandomMapPattern(random);
+                    mapPattern = GenerateRandomMapPattern(random, rotations);
                     activeCount = CountActive(mapPattern);
                 } while (activeCount > (hard ? 9 : 20) || activeCount < (hard ? 3 : 11));
                 
-                if (!mapPatternList.Any(m => m.SequenceEqual(mapPattern)))
+                if (!mapPatternList.Any(m => m.SequenceEqual(mapPattern))
+                    || hard && rotations == 1) //there are only around 35 hard mode 6 sided patterns that exist...
                 {
                     mapPatternList.Add(mapPattern);
                 }
+                if ( patternCount / 3 == mapPatternList.Count
+                    || hard && mapPatternList.Count == (int) (patternCount * 0.05)) //too many repetitions of 6 sided on hard mode
+                {
+                    if (rotations != 2)
+                    {
+                        rotations = 2;
+                        Console.WriteLine("6 sided patterns generated.");
+                    }
+                }
+                if ((hard ? patternCount / 2 : patternCount / 3 * 2) == mapPatternList.Count)
+                {
+                    rotations = 3;
+                    Console.WriteLine("3 sided patterns generated.");
+                }
             }
+            Console.WriteLine("2 sided patterns generated.\n" + patternCount + " map patterns generated.");
             return mapPatternList;
         }
 
         //creates pretty patterns by mirroring spreading holes in 2, 3 or 6 directions
-        public static int[] GenerateRandomMapPattern(Random random)
+        public static int[] GenerateRandomMapPattern(Random random, int rotations)
         {
             //default game map
             int[] generatedMap = {
@@ -89,9 +106,6 @@ namespace garden_solver_generator
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             };
             var marbleCount = 90;
-
-            //how many times to rotate 60 degrees, determines if pattern will be 2, 3 or 6 sided
-            var rotations = random.Next(1, 4);
 
             //how many points to start spreading holes from
             var numberOfPoints = random.Next(0 + rotations, 3 + rotations);

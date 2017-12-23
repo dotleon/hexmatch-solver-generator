@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace garden_solver_generator
+﻿namespace garden_solver_generator
 {
     class Marble
     {
@@ -21,7 +15,6 @@ namespace garden_solver_generator
 
         public void UpdateActive(Solver solver)
         {
-            solver.ActiveMarbles.Remove(this);
             if (Type > 5 && Type < 12 && Type != solver.MetalLevel)
                 return;
             var count = 0;
@@ -45,7 +38,6 @@ namespace garden_solver_generator
                     return;
                 }
             }
-            solver.ActiveMarbles.Remove(this);
         }
 
         public void UpdateNeighbours(Solver solver)

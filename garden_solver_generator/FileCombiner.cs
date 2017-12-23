@@ -1,47 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace garden_solver_generator
 {
     static class FileCombiner
     {
         //put together the separately created map databases
-        public static void CombineFiles()
+        public static void CombineFiles(int mapCount)
         {
             BinaryReader bReader;
-            BinaryWriter bWriter = new BinaryWriter(File.OpenWrite("40kmixed.dat"));
-            for (int i = 1; i <= 8; i++)
-            {
-                bReader = new BinaryReader(File.OpenRead("1250easy" + i + ".dat"));
-                var mapByteArray = bReader.ReadBytes(67500);
-                bWriter.Write(mapByteArray);
-                bReader.Close();
-            }
-            for (int i = 1; i <= 8; i++)
-            {
-                bReader = new BinaryReader(File.OpenRead("1250hard" + i + ".dat"));
-                var mapByteArray = bReader.ReadBytes(67500);
-                bWriter.Write(mapByteArray);
-                bReader.Close();
-            }
-            for (int i = 1; i <= 8; i++)
-            {
-                bReader = new BinaryReader(File.OpenRead("1250easyquint" + i + ".dat"));
-                var mapByteArray = bReader.ReadBytes(67500);
-                bWriter.Write(mapByteArray);
-                bReader.Close();
-            }
-            for (int i = 1; i <= 8; i++)
-            {
-                bReader = new BinaryReader(File.OpenRead("1250hardquint" + i + ".dat"));
-                var mapByteArray = bReader.ReadBytes(67500);
-                bWriter.Write(mapByteArray);
-                bReader.Close();
-            }
+            BinaryWriter bWriter = new BinaryWriter(File.OpenWrite(mapCount * 4 + "mixed.dat"));
+
+            bReader = new BinaryReader(File.OpenRead(mapCount + "easy.dat"));
+            var mapByteArray = bReader.ReadBytes(mapCount * 54);
+            bWriter.Write(mapByteArray);
+            bReader.Close();
+
+            bReader = new BinaryReader(File.OpenRead(mapCount + "hard.dat"));
+            mapByteArray = bReader.ReadBytes(mapCount * 54);
+            bWriter.Write(mapByteArray);
+            bReader.Close();
+
+            bReader = new BinaryReader(File.OpenRead(mapCount + "easyquint.dat"));
+            mapByteArray = bReader.ReadBytes(mapCount * 54);
+            bWriter.Write(mapByteArray);
+            bReader.Close();
+
+            bReader = new BinaryReader(File.OpenRead(mapCount + "hardquint.dat"));
+            mapByteArray = bReader.ReadBytes(mapCount * 54);
+            bWriter.Write(mapByteArray);
+            bReader.Close();
+            
             bWriter.Close();
         }
     }

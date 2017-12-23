@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace garden_solver_generator
+﻿namespace garden_solver_generator
 {
     static class HexMath
     {

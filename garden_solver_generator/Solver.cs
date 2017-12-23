@@ -26,10 +26,7 @@ namespace garden_solver_generator
             var steps = new List<Step>();
             ActiveMarbles = new List<Marble>();
 
-            foreach (var marble in Marbles.Where(m => m != null))
-            {
-                marble.UpdateActive(this);
-            }
+            UpdateAll();
 
             steps.Add(new Step(this));
 
@@ -79,6 +76,15 @@ namespace garden_solver_generator
             for (int i = 0; i < Marbles.Length; i++)
                 str += Marbles[i] != null ? 1 : 0;
             return str;
+        }
+
+        public void UpdateAll()
+        {
+            ActiveMarbles.Clear();
+            foreach (var marble in Marbles)
+            {
+                marble?.UpdateActive(this);
+            }
         }
 
     }

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace garden_solver_generator
 {
@@ -123,21 +120,19 @@ namespace garden_solver_generator
         {
             foreach (var marble in marbles)
             {
-                //delete and deactivate
+                //delete marble
                 solver.Marbles[marble.X * 13 + marble.Y] = null;
-                solver.ActiveMarbles.Remove(marble);
                 solver.MarbleTypeCount[marble.Type]--;
 
                 //increase metallevel if quicksilver, also try to activate next metal
                 if (marble.Type == 5)
                 {
                     solver.MetalLevel++;
-                    solver.Marbles.SingleOrDefault(m => m != null && m.Type == solver.MetalLevel)?.UpdateActive(solver);
                 }
 
                 solver.MarbleCount--;
-                
-                marble.UpdateNeighbours(solver);
+
+                solver.UpdateAll();
             }
         }
 
@@ -147,19 +142,17 @@ namespace garden_solver_generator
             {
                 //delete and deactivate
                 solver.Marbles[marble.X * 13 + marble.Y] = marble;
-                solver.ActiveMarbles.Add(marble);
                 solver.MarbleTypeCount[marble.Type]++;
 
                 //increase metallevel if quicksilver, also try to activate next metal
                 if (marble.Type == 5)
                 {
                     solver.MetalLevel--;
-                    solver.Marbles.SingleOrDefault(m => m != null && m.Type == solver.MetalLevel)?.UpdateActive(solver);
                 }
 
                 solver.MarbleCount++;
 
-                marble.UpdateNeighbours(solver);
+                solver.UpdateAll();
             }
         }
     }
